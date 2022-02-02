@@ -5,13 +5,37 @@
 
 #### Ejercicio – programación concurrente, condiciones de carrera y sincronización de hilos. EJERCICIO INDIVIDUAL O EN PAREJAS.
 
+## Estudiantes
+
+- Camilo Andrés Pichimata Cárdenas
+- Zuly Valentina Vargas Ramírez
+
+### Prerrequisitos para la ejecución de este laboratorio
+
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [Java ](https://www.oracle.com/co/java/technologies/javase/javase-jdk8-downloads.html) -  Development Environment
+* [Git](https://git-scm.com/) - Version Control System
+
 ##### Parte I – Antes de terminar la clase.
 
 Control de hilos con wait/notify. Productor/consumidor.
 
 1. Revise el funcionamiento del programa y ejecútelo. Mientras esto ocurren, ejecute jVisualVM y revise el consumo de CPU del proceso correspondiente. A qué se debe este consumo?, cual es la clase responsable?
+    
+	El consumo de CPU alcanza un 12% aproximadamente. La clase responsable es la clase Consumer ya que esta sigue ejecutando el ciclo aún cuando la lista esta vacía y no tiene nada que consumir.
+    ![](img/cpu_before.jpg )
 2. Haga los ajustes necesarios para que la solución use más eficientemente la CPU, teniendo en cuenta que -por ahora- la producción es lenta y el consumo es rápido. Verifique con JVisualVM que el consumo de CPU se reduzca.
-3. Haga que ahora el productor produzca muy rápido, y el consumidor consuma lento. Teniendo en cuenta que el productor conoce un límite de Stock (cuantos elementos debería tener, a lo sumo en la cola), haga que dicho límite se respete. Revise el API de la colección usada como cola para ver cómo garantizar que dicho límite no se supere. Verifique que, al poner un límite pequeño para el 'stock', no haya consumo alto de CPU ni errores.
+    
+	Para corregir este consumo sincronizamos la lista que guarda los números de tal forma que el consumidor solo siga ejecutando el ciclo cuando la lista tenga elementos, de lo contrario se queda en estado de espera.
+    Desde Producer al momento de realizar la inserción en la lista de un dato se notifica al Consumidor para que este se ejecute y salga del estado de espera.
+    Estos ajustes disminuyen en consumo de CPU a un uso aproximado del 3%.
+   ![](img/cpu_after.jpg )
+	
+3.Haga que ahora el productor produzca muy rápido, y el consumidor consuma lento. 
+Teniendo en cuenta que el productor conoce un límite de Stock (cuantos elementos debería tener, a lo sumo en la cola), 
+haga que dicho límite se respete. Revise el API de la colección usada como cola para ver 
+cómo garantizar que dicho límite no se supere. Verifique que, al poner un límite 
+pequeño para el 'stock', no haya consumo alto de CPU ni errores.
 
 
 ##### Parte II. – Antes de terminar la clase.
