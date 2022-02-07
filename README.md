@@ -22,20 +22,22 @@ Control de hilos con wait/notify. Productor/consumidor.
 
 1. Revise el funcionamiento del programa y ejecútelo. Mientras esto ocurren, ejecute jVisualVM y revise el consumo de CPU del proceso correspondiente. A qué se debe este consumo?, cual es la clase responsable?
     
-	El consumo de CPU alcanza un 12% aproximadamente. La clase responsable es la clase Consumer ya que esta sigue ejecutando el ciclo aún cuando la lista esta vacía y no tiene nada que consumir.
+    El consumo de CPU alcanza un 12% aproximadamente. La clase responsable es la clase Consumer ya que esta sigue ejecutando el ciclo aún cuando la lista esta vacía y no tiene nada que consumir.
     ![](img/cpu_before.jpg )
 2. Haga los ajustes necesarios para que la solución use más eficientemente la CPU, teniendo en cuenta que -por ahora- la producción es lenta y el consumo es rápido. Verifique con JVisualVM que el consumo de CPU se reduzca.
     
-	Para corregir este consumo sincronizamos la lista que guarda los números de tal forma que el consumidor solo siga ejecutando el ciclo cuando la lista tenga elementos, de lo contrario se queda en estado de espera.
+    Para corregir este consumo sincronizamos la lista que guarda los números de tal forma que el consumidor solo siga ejecutando el ciclo cuando la lista tenga elementos, de lo contrario se queda en estado de espera.
     Desde Producer al momento de realizar la inserción en la lista de un dato se notifica al Consumidor para que este se ejecute y salga del estado de espera.
     Estos ajustes disminuyen en consumo de CPU a un uso aproximado del 3%.
    ![](img/cpu_after.jpg )
 	
-3.Haga que ahora el productor produzca muy rápido, y el consumidor consuma lento. 
-Teniendo en cuenta que el productor conoce un límite de Stock (cuantos elementos debería tener, a lo sumo en la cola), 
-haga que dicho límite se respete. Revise el API de la colección usada como cola para ver 
-cómo garantizar que dicho límite no se supere. Verifique que, al poner un límite 
-pequeño para el 'stock', no haya consumo alto de CPU ni errores.
+    3.Haga que ahora el productor produzca muy rápido, y el consumidor consuma lento. 
+    Teniendo en cuenta que el productor conoce un límite de Stock (cuantos elementos debería tener, a lo sumo en la cola), 
+    haga que dicho límite se respete. Revise el API de la colección usada como cola para ver 
+    cómo garantizar que dicho límite no se supere. Verifique que, al poner un límite 
+    pequeño para el 'stock', no haya consumo alto de CPU ni errores.
+	
+    Para lograr esto se empleo el constructor LinkedBlockingQueue<>(int capacity); para definir el límite de la lista. Se dio un tiempo de espera del consumidor de 	2 segundos para que el consumidor consumiera más lento.
 
 
 ##### Parte II. – Antes de terminar la clase.
@@ -45,6 +47,8 @@ Teniendo en cuenta los conceptos vistos de condición de carrera y sincronizaci�
 - La búsqueda distribuida se detenga (deje de buscar en las listas negras restantes) y retorne la respuesta apenas, en su conjunto, los hilos hayan detectado el número de ocurrencias requerido que determina si un host es confiable o no (_BLACK_LIST_ALARM_COUNT_).
 - Lo anterior, garantizando que no se den condiciones de carrera.
 
+	Para lograr esto se modificó el programa de tal forma que la lista donde se guardan las ocurrencias fuera concurrente, al igual que se modificaron los atributos 	que contabilizaban el número de oucrrencias encontradas y listas revisas de tal forma que fueran atómicos y garantizar que no existieran condiciones de carrea y 	que exista una busqueda más eficiente que la que se realizaba anteriormente.
+	
 ##### Parte III. – Avance para el martes, antes de clase.
 
 Sincronización y Dead-Locks.
