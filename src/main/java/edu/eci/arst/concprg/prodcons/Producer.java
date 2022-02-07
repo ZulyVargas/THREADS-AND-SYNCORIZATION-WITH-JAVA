@@ -32,18 +32,13 @@ public class Producer extends Thread {
     public void run() {
         while (true) {
             dataSeed = dataSeed + rand.nextInt(100);
-            System.out.println("Producer added " + dataSeed);
-            synchronized (queue) {
-                if ( stockLimit - queue.size() < 2 ) {
-                    try {
-                        Thread.sleep(2000);
+                if ( stockLimit - queue.size() != 1 ) {
+                    synchronized (queue) {
+                        System.out.println("Producer added " + dataSeed);
                         queue.add(dataSeed);
                         queue.notifyAll();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
-            }
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ex) {

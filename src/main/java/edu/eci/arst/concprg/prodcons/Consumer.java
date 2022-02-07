@@ -41,7 +41,6 @@ public class Consumer extends Thread{
                     e.printStackTrace();
                 }
             }
-            
         }
     }
 }
