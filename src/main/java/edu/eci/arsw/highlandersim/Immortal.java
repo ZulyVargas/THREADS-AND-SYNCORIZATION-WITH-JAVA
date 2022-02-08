@@ -2,12 +2,15 @@ package edu.eci.arsw.highlandersim;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Immortal extends Thread {
 
     private ImmortalUpdateReportCallback updateCallback=null;
     
-    private int health;
+    //Atomic para que sea actualizada una vez a la vez
+    //private int health;
+    private AtomicInteger health;
     
     private int defaultDamageValue;
 
@@ -16,9 +19,13 @@ public class Immortal extends Thread {
     private final String name;
 
     private final Random r = new Random(System.currentTimeMillis());
+    
+    private boolean paused = false;
 
 
-    public Immortal(String name, List<Immortal> immortalsPopulation, int health, int defaultDamageValue, ImmortalUpdateReportCallback ucb) {
+
+
+	public Immortal(String name, List<Immortal> immortalsPopulation, AtomicInteger health, int defaultDamageValue, ImmortalUpdateReportCallback ucb) {
         super(name);
         this.updateCallback=ucb;
         this.name = name;
@@ -28,10 +35,19 @@ public class Immortal extends Thread {
     }
 
     public void run() {
-
         while (true) {
             Immortal im;
-
+            //Pausado (desde el método del botón)
+            while (paused) {
+            	try {
+            		synchronized(this) {
+            			this.wait();
+            		}
+            	}catch(InterruptedException e) {
+            		e.printStackTrace();
+            	}
+            }
+            
             int myIndex = immortalsPopulation.indexOf(this);
 
             int nextFighterIndex = r.nextInt(immortalsPopulation.size());
@@ -56,22 +72,33 @@ public class Immortal extends Thread {
     }
 
     public void fight(Immortal i2) {
-
-        if (i2.getHealth() > 0) {
-            i2.changeHealth(i2.getHealth() - defaultDamageValue);
-            this.health += defaultDamageValue;
-            updateCallback.processReport("Fight: " + this + " vs " + i2+"\n");
-        } else {
-            updateCallback.processReport(this + " says:" + i2 + " is already dead!\n");
-        }
-
+    		Immortal immortal1;
+    		Immortal immortal2;
+    		
+    		//El primero a bloquear es el menor
+    		immortal1 = this.getId() < i2.getId() ? this : i2;
+    		immortal2 = this.getId() > i2.getId() ? this : i2;
+    		
+    		if (i2.getHealth().get() > 0) {
+    			synchronized (immortal1) {
+    				synchronized (immortal2) {
+	    				i2.changeHealth(i2.getHealth().get() - defaultDamageValue);
+	    				//this.health += defaultDamageValue;
+    					this.health.getAndAdd(defaultDamageValue);
+    					updateCallback.processReport("Fight: " + this + " vs " + i2+"\n");
+    				}
+    			}
+	        } else {
+	            updateCallback.processReport(this + " says:" + i2 + " is already dead!\n");
+	        }
     }
 
     public void changeHealth(int v) {
-        health = v;
+    	//Cambia a lo que llega
+        health.getAndSet(v);
     }
 
-    public int getHealth() {
+    public AtomicInteger getHealth() {
         return health;
     }
 
@@ -80,5 +107,12 @@ public class Immortal extends Thread {
 
         return name + "[" + health + "]";
     }
+    public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
 
 }
