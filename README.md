@@ -108,13 +108,36 @@ Sincronización y Dead-Locks.
 	En las lecturas se menciona que "si se puede garantizar que todos los hilos que necesitan bloqueos L y M al mismo tiempo siempre adquieren L y M en el mismo 	orden, 	no habrá bloqueo. " Por lo que para solucionar el deadlock presentado es posible indicar que se bloquee primero el immortal con id menor entre los dos.
 		
 ![](img/sindb.jpg )
-	De esta forma el programa no se detiene y se cumple el invariante (Health de 300)
+	
+	De esta forma el programa no se detiene y se cumple el invariante (suma total del valor health igual a  300)
 	
 9. Una vez corregido el problema, rectifique que el programa siga funcionando de manera consistente cuando se ejecutan 100, 1000 o 10000 inmortales. Si en estos casos grandes se empieza a incumplir de nuevo el invariante, debe analizar lo realizado en el paso 4.
+
+
+	- 100:
+	
+![](img/100threads.jpg )
+	
+Se cumple el invariante de 10000 para este caso (100*100).	
+
+	- 1000:
+	
+![](img/1000threads.jpg )
+	
+Se cumple el invariante de 100000 para este caso (1000*100).
+
+	-10000:
+		
+![](img/10000threads.jpg )
+	
+Se cumple el invariante de 1000000 para este caso (10000*100).
 
 10. Un elemento molesto para la simulación es que en cierto punto de la misma hay pocos 'inmortales' vivos realizando peleas fallidas con 'inmortales' ya muertos. Es necesario ir suprimiendo los inmortales muertos de la simulación a medida que van muriendo. Para esto:
 	* Analizando el esquema de funcionamiento de la simulación, esto podría crear una condición de carrera? Implemente la funcionalidad, ejecute la simulación y observe qué problema se presenta cuando hay muchos 'inmortales' en la misma. Escriba sus conclusiones al respecto en el archivo RESPUESTAS.txt.
 	* Corrija el problema anterior __SIN hacer uso de sincronización__, pues volver secuencial el acceso a la lista compartida de inmortales haría extremadamente lenta la simulación.
+	
+	
+	
 
 11. Para finalizar, implemente la opción STOP.
 
