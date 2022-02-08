@@ -124,6 +124,8 @@ public class ControlFrame extends JFrame {
         });
 
         toolBar.add(btnResume);
+   
+        
 
         JLabel lblNumOfImmortals = new JLabel("num. of immortals:");
         toolBar.add(lblNumOfImmortals);
@@ -135,6 +137,17 @@ public class ControlFrame extends JFrame {
 
         JButton btnStop = new JButton("STOP");
         btnStop.setForeground(Color.RED);
+        btnStop.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                /**
+                 * Para todos los hilos 
+                 */
+            	for (Immortal im : immortals) {
+                    im.dead=true;
+                }
+            }
+        });
+
         toolBar.add(btnStop);
 
         scrollPane = new JScrollPane();

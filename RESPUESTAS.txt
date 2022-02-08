@@ -1,0 +1,1 @@
+Se puede generar una condición de carrera si al suprimir un inmortal al morir pero al tiempo otro hilo esta consultando la lista de inmortales.

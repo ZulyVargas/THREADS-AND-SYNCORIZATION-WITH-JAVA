@@ -21,6 +21,8 @@ public class Immortal extends Thread {
     private final Random r = new Random(System.currentTimeMillis());
     
     private boolean paused = false;
+    
+    public boolean dead = false;
 
 
 
@@ -35,7 +37,7 @@ public class Immortal extends Thread {
     }
 
     public void run() {
-        while (true) {
+        while (!dead) {
             Immortal im;
             //Pausado (desde el método del botón)
             while (paused) {
@@ -79,7 +81,11 @@ public class Immortal extends Thread {
     		immortal1 = this.getId() < i2.getId() ? this : i2;
     		immortal2 = this.getId() > i2.getId() ? this : i2;
     		
-    		if (i2.getHealth().get() > 0) {
+    		if (this.getHealth().get() <= 0) {
+    			this.dead = true;
+    			immortalsPopulation.remove(this);
+    		}
+    		else if (i2.getHealth().get() > 0) {
     			synchronized (immortal1) {
     				synchronized (immortal2) {
 	    				i2.changeHealth(i2.getHealth().get() - defaultDamageValue);
@@ -88,8 +94,8 @@ public class Immortal extends Thread {
     					updateCallback.processReport("Fight: " + this + " vs " + i2+"\n");
     				}
     			}
-	        } else {
-	            updateCallback.processReport(this + " says:" + i2 + " is already dead!\n");
+	        }else {
+	        		updateCallback.processReport(this + " says:" + i2 + " is already dead!\n");
 	        }
     }
 

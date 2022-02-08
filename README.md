@@ -136,10 +136,11 @@ Se cumple el invariante de 1000000 para este caso (10000*100).
 	* Analizando el esquema de funcionamiento de la simulación, esto podría crear una condición de carrera? Implemente la funcionalidad, ejecute la simulación y observe qué problema se presenta cuando hay muchos 'inmortales' en la misma. Escriba sus conclusiones al respecto en el archivo RESPUESTAS.txt.
 	* Corrija el problema anterior __SIN hacer uso de sincronización__, pues volver secuencial el acceso a la lista compartida de inmortales haría extremadamente lenta la simulación.
 	
-	
+	Para solucionar esto se debe agregar una verificación en la cual se suprima al hilo de la lista de inmortales si ya esta muerto.
 	
 
 11. Para finalizar, implemente la opción STOP.
+	
 
 <!--
 ### Criterios de evaluación
