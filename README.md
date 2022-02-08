@@ -64,12 +64,22 @@ Sincronización y Dead-Locks.
 
 2. Revise el código e identifique cómo se implemento la funcionalidad antes indicada. Dada la intención del juego, un invariante debería ser que la sumatoria de los puntos de vida de todos los jugadores siempre sea el mismo(claro está, en un instante de tiempo en el que no esté en proceso una operación de incremento/reducción de tiempo). Para este caso, para N jugadores, cual debería ser este valor?.
 
+	El valor debería ser el número de jugadores por la cantidad de salud inicial.
+	 	
 3. Ejecute la aplicación y verifique cómo funcionan las opción ‘pause and check’. Se cumple el invariante?.
+ 	
+ 	El invariante no se cumple ya que la suma total debería ser de *300*. (100 de nivel de salud * 3 immmortals) y es en este caso de *980*.
+ 	 
+ 	![](img/invariante.jpg )
 
 4. Una primera hipótesis para que se presente la condición de carrera para dicha función (pause and check), es que el programa consulta la lista cuyos valores va a imprimir, a la vez que otros hilos modifican sus valores. Para corregir esto, haga lo que sea necesario para que efectivamente, antes de imprimir los resultados actuales, se pausen todos los demás hilos. Adicionalmente, implemente la opción ‘resume’.
+	
+	Para lograr que se cumpla el invariante se dejó como AtomicInteger la salud para que sea editada una vez al tiempo. Se implementó la opción resume, para esto se 	usa notifyAll() ara que los hilos sigan ejecutandose. En la opción de pause se hace wait() para los hilos y se procede a realizar la suma de la salud de cada 	uno.
+	
 
 5. Verifique nuevamente el funcionamiento (haga clic muchas veces en el botón). Se cumple o no el invariante?.
-
+	Aún no se cumple el invariante.
+	
 6. Identifique posibles regiones críticas en lo que respecta a la pelea de los inmortales. Implemente una estrategia de bloqueo que evite las condiciones de carrera. Recuerde que si usted requiere usar dos o más ‘locks’ simultáneamente, puede usar bloques sincronizados anidados:
 
 	```java
@@ -79,11 +89,27 @@ Sincronización y Dead-Locks.
 		}
 	}
 	```
-
+	Para evitar las condiciones de carrera se debe sincronizar el acceso a cada immortal.
+	
 7. Tras implementar su estrategia, ponga a correr su programa, y ponga atención a si éste se llega a detener. Si es así, use los programas jps y jstack para identificar por qué el programa se detuvo.
+	
+	Implementando el bloque de sincronización, el programa se detiene. para comprobar lo sucedido se emplearon los comandos jps y jstack co el id del proceso dado:
+	
+![](img/jps1.jpg )
 
+	Se puede observar que se produjo un deadlock:
+	
+![](img/jps2.jpg )
+
+	
+	
 8. Plantee una estrategia para corregir el problema antes identificado (puede revisar de nuevo las páginas 206 y 207 de _Java Concurrency in Practice_).
 
+	En las lecturas se menciona que "si se puede garantizar que todos los hilos que necesitan bloqueos L y M al mismo tiempo siempre adquieren L y M en el mismo 	orden, 	no habrá bloqueo. " Por lo que para solucionar el deadlock presentado es posible indicar que se bloquee primero el immortal con id menor entre los dos.
+		
+![](img/sindb.jpg )
+	De esta forma el programa no se detiene y se cumple el invariante (Health de 300)
+	
 9. Una vez corregido el problema, rectifique que el programa siga funcionando de manera consistente cuando se ejecutan 100, 1000 o 10000 inmortales. Si en estos casos grandes se empieza a incumplir de nuevo el invariante, debe analizar lo realizado en el paso 4.
 
 10. Un elemento molesto para la simulación es que en cierto punto de la misma hay pocos 'inmortales' vivos realizando peleas fallidas con 'inmortales' ya muertos. Es necesario ir suprimiendo los inmortales muertos de la simulación a medida que van muriendo. Para esto:
