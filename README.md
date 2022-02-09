@@ -68,7 +68,7 @@ Sincronización y Dead-Locks.
 	 	
 3. Ejecute la aplicación y verifique cómo funcionan las opción ‘pause and check’. Se cumple el invariante?.
  	
- 	El invariante no se cumple ya que la suma total debería ser de *300*. (100 de nivel de salud * 3 immmortals) y es en este caso de *980*.
+ 	El invariante no se cumple ya que la suma total debería ser de *300*. (100 de nivel de salud * 3 immmortals) y es en este caso de *980*, además en cada una de las veces que se pulsa el botón el resultado cambia.
  	 
  	![](img/invariante.jpg )
 

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JFrame;
@@ -41,6 +42,7 @@ public class ControlFrame extends JFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
+    	
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -96,7 +98,7 @@ public class ControlFrame extends JFrame {
                 for (Immortal im : immortals) {
                     im.setPaused(true);
                 }
-          
+                
                 for (Immortal im : immortals) {
                     sum += im.getHealth().get();
                 }
@@ -163,14 +165,14 @@ public class ControlFrame extends JFrame {
 
     }
 
-    public List<Immortal> setupInmortals() {
+    public CopyOnWriteArrayList<Immortal> setupInmortals() {
 
         ImmortalUpdateReportCallback ucb=new TextAreaUpdateReportCallback(output,scrollPane);
         
         try {
             int ni = Integer.parseInt(numOfImmortals.getText());
 
-            List<Immortal> il = new LinkedList<Immortal>();
+            CopyOnWriteArrayList<Immortal> il = new CopyOnWriteArrayList<Immortal>();
 
             for (int i = 0; i < ni; i++) {
                 Immortal i1 = new Immortal("im" + i, il, new AtomicInteger(DEFAULT_IMMORTAL_HEALTH), DEFAULT_DAMAGE_VALUE,ucb);

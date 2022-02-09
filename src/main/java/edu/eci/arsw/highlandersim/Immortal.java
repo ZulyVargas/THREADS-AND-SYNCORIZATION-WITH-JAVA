@@ -1,7 +1,7 @@
 package edu.eci.arsw.highlandersim;
 
-import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Immortal extends Thread {
@@ -14,7 +14,7 @@ public class Immortal extends Thread {
     
     private int defaultDamageValue;
 
-    private final List<Immortal> immortalsPopulation;
+    private final CopyOnWriteArrayList<Immortal> immortalsPopulation;
 
     private final String name;
 
@@ -24,16 +24,15 @@ public class Immortal extends Thread {
     
     public boolean dead = false;
 
-
-
-
-	public Immortal(String name, List<Immortal> immortalsPopulation, AtomicInteger health, int defaultDamageValue, ImmortalUpdateReportCallback ucb) {
+    
+	public Immortal(String name, CopyOnWriteArrayList<Immortal> immortalsPopulation, AtomicInteger health, int defaultDamageValue, ImmortalUpdateReportCallback ucb) {
         super(name);
         this.updateCallback=ucb;
         this.name = name;
         this.immortalsPopulation = immortalsPopulation;
         this.health = health;
         this.defaultDamageValue=defaultDamageValue;
+        
     }
 
     public void run() {
@@ -55,9 +54,9 @@ public class Immortal extends Thread {
             int nextFighterIndex = r.nextInt(immortalsPopulation.size());
 
             //avoid self-fight
-            if (nextFighterIndex == myIndex) {
-                nextFighterIndex = ((nextFighterIndex + 1) % immortalsPopulation.size());
-            }
+            while (nextFighterIndex == myIndex) {
+            	nextFighterIndex = r.nextInt(immortalsPopulation.size());
+			}
 
             im = immortalsPopulation.get(nextFighterIndex);
 

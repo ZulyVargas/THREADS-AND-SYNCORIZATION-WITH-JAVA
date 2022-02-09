@@ -19,12 +19,12 @@ public class BlackListValidator extends Thread {
 	private AtomicInteger ocurrencesCount;
 	private String ipaddress; 
 	private HostBlacklistsDataSourceFacade skds;
-	private CopyOnWriteArrayList<Integer> blackListOcurrences = new CopyOnWriteArrayList();
+	private CopyOnWriteArrayList<Integer> blackListOcurrences = new CopyOnWriteArrayList<>();
 	//private LinkedList<Integer> blackListOcurrences;
 	private AtomicInteger checkedListsCount;
 	
 	
-	public BlackListValidator (int initial_server, int final_server, String ipaddress, HostBlacklistsDataSourceFacade skds, CopyOnWriteArrayList blackListOcurrences, AtomicInteger ocurrencesCount, AtomicInteger checkedListsCount){
+	public BlackListValidator (int initial_server, int final_server, String ipaddress, HostBlacklistsDataSourceFacade skds, CopyOnWriteArrayList<Integer> blackListOcurrences, AtomicInteger ocurrencesCount, AtomicInteger checkedListsCount){
 		this.initial_server = initial_server;
 		this.final_server = final_server;
 		this.ocurrencesCount = ocurrencesCount ;
